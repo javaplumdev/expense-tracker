@@ -7,12 +7,15 @@ import {
 } from 'firebase/auth';
 import { setDoc, doc, onSnapshot, collection } from 'firebase/firestore';
 import { auth, db } from '../firebase/firebase-config';
+import { toast } from 'react-hot-toast';
 
 export const ContextVar = createContext();
 
 export const ContextProvider = ({ children }) => {
 	const [users, setUsers] = useState([]);
 	const [user, setUser] = useState([]);
+	const [data, setData] = useState([]);
+	const [modalIsOpen, setIsOpen] = useState(false);
 
 	const createAccount = (email, password) => {
 		onAuthStateChanged(auth, (currentUser) => {
@@ -38,6 +41,10 @@ export const ContextProvider = ({ children }) => {
 		onSnapshot(collection(db, 'users'), (snapshot) => {
 			setUsers(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
 		});
+
+		onSnapshot(collection(db, 'data'), (snapshot) => {
+			setData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+		});
 	}, []);
 
 	useEffect(() => {
@@ -50,12 +57,58 @@ export const ContextProvider = ({ children }) => {
 		};
 	}, []);
 
+	const postContent = (
+		expense_type,
+		date,
+		category,
+		method,
+		amount,
+		uid,
+		postId
+	) => {
+		if (
+			!expense_type.trim() ||
+			expense_type === '' ||
+			!category.trim() ||
+			category === '' ||
+			!method.trim() ||
+			method === '' ||
+			!amount.trim() ||
+			amount === ''
+		) {
+			toast.error('Please enter missing field');
+		} else {
+			setDoc(doc(db, 'data', postId), {
+				expense_type: expense_type,
+				date: date,
+				method: method,
+				amount: amount,
+				uid: uid,
+				postId: postId,
+			});
+
+			toast.success('Successfully added!');
+		}
+	};
+
 	const logOut = () => {
 		return signOut(auth);
 	};
 
 	return (
-		<ContextVar.Provider value={{ createAccount, logIn, user, users, logOut }}>
+		<ContextVar.Provider
+			value={{
+				createAccount,
+				logIn,
+				user,
+				users,
+				logOut,
+				modalIsOpen,
+				setIsOpen,
+				postContent,
+				data,
+			}}
+		>
 			{children}
 		</ContextVar.Provider>
 	);
