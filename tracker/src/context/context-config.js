@@ -5,7 +5,15 @@ import {
 	signInWithEmailAndPassword,
 	signOut,
 } from 'firebase/auth';
-import { setDoc, doc, onSnapshot, collection } from 'firebase/firestore';
+import {
+	setDoc,
+	doc,
+	onSnapshot,
+	collection,
+	query,
+	orderBy,
+	serverTimestamp,
+} from 'firebase/firestore';
 import { auth, db } from '../firebase/firebase-config';
 import { toast } from 'react-hot-toast';
 
@@ -16,6 +24,7 @@ export const ContextProvider = ({ children }) => {
 	const [user, setUser] = useState([]);
 	const [data, setData] = useState([]);
 	const [modalIsOpen, setIsOpen] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const createAccount = (email, password) => {
 		onAuthStateChanged(auth, (currentUser) => {
@@ -42,9 +51,14 @@ export const ContextProvider = ({ children }) => {
 			setUsers(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
 		});
 
-		onSnapshot(collection(db, 'data'), (snapshot) => {
-			setData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-		});
+		onSnapshot(
+			query(collection(db, 'data'), orderBy('timestamp', 'desc')),
+			(snapshot) => {
+				setData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+
+				setIsLoading(false);
+			}
+		);
 	}, []);
 
 	useEffect(() => {
@@ -82,9 +96,10 @@ export const ContextProvider = ({ children }) => {
 				expense_type: expense_type,
 				date: date,
 				method: method,
-				amount: amount,
+				amount: +amount,
 				uid: uid,
 				postId: postId,
+				timestamp: serverTimestamp(),
 			});
 
 			toast.success('Successfully added!');
@@ -107,6 +122,7 @@ export const ContextProvider = ({ children }) => {
 				setIsOpen,
 				postContent,
 				data,
+				isLoading,
 			}}
 		>
 			{children}

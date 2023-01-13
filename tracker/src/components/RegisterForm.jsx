@@ -36,7 +36,7 @@ const RegisterForm = () => {
 				style={{ width: '520px' }}
 			>
 				<div className="my-3">
-					<h1 className="text-2xl  text-blue-800">Expense Tracker</h1>
+					<h1 className="text-2xl  text-red-500">Expense Tracker</h1>
 					<p className="text-slate-700 font-medium">Register Form</p>
 					{alert && (
 						<p className="bg-red-800 text-white p-2 rounded mt-3">{alert}</p>
@@ -64,14 +64,14 @@ const RegisterForm = () => {
 						onChange={(e) => setPassword(e.target.value)}
 					/>
 				</label>
-				<button className="bg-blue-700 w-full px-3 py-2 rounded text-white hover:bg-blue-800">
+				<button className="bg-red-500 w-full px-3 py-2 rounded text-white hover:bg-red-600">
 					Create Account
 				</button>
 
 				<div className="text-center w-full my-3 text-sm">
 					<p>
 						Already have an account?{' '}
-						<Link to="/" className="text-blue-500 underline">
+						<Link to="/" className="text-red-500 underline">
 							Login
 						</Link>{' '}
 					</p>

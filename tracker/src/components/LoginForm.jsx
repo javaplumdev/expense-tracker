@@ -34,10 +34,10 @@ const LoginForm = () => {
 				onSubmit={handleSubmit}
 			>
 				<div className="my-3">
-					<h1 className="text-2xl  text-blue-800">Expense Tracker</h1>
+					<h1 className="text-2xl  text-red-500">Expense Tracker</h1>
 					<p className="text-slate-700 font-medium">Login Form</p>
 					{alert && (
-						<p className="bg-red-800 text-white p-2 rounded mt-3">{alert}</p>
+						<p className="bg-red-600 text-white p-2 rounded mt-3">{alert}</p>
 					)}
 				</div>
 				<label className="block">
@@ -62,14 +62,14 @@ const LoginForm = () => {
 						onChange={(e) => setPassword(e.target.value)}
 					/>
 				</label>
-				<button className="bg-blue-700 w-full px-3 py-2 rounded text-white hover:bg-blue-800">
+				<button className="bg-red-500 w-full px-3 py-2 rounded text-white hover:bg-red-600">
 					Log in
 				</button>
 
 				<div className="text-center w-full my-3 text-sm">
 					<p>
 						Don't have an account?{' '}
-						<Link to="/register" className="text-blue-500 underline">
+						<Link to="/register" className="text-red-500 underline">
 							Register
 						</Link>{' '}
 					</p>
