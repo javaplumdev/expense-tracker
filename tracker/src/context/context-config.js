@@ -26,20 +26,24 @@ export const ContextProvider = ({ children }) => {
 	const [modalIsOpen, setIsOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 
-	const createAccount = (email, password) => {
-		onAuthStateChanged(auth, (currentUser) => {
-			try {
-				setDoc(doc(db, 'users', currentUser.uid), {
-					id: currentUser.uid,
-					email: email,
-					password: password,
-				});
-			} catch (e) {
-				console.log(e);
-			}
-		});
+	const createAccount = async (email, password) => {
+		try {
+			// Create the user with email and password
+			const userCredential = await createUserWithEmailAndPassword(
+				email,
+				password
+			);
 
-		return createUserWithEmailAndPassword(auth, email, password);
+			// Get the user ID
+			const userId = userCredential.user.uid;
+
+			// Create a Firestore document for the user
+			await collection('users').doc(userId).set({ email });
+
+			return userCredential;
+		} catch (error) {
+			throw error;
+		}
 	};
 
 	const logIn = (email, password) => {

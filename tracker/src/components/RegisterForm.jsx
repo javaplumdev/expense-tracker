@@ -12,16 +12,15 @@ const RegisterForm = () => {
 
 	let navigate = useNavigate();
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = (e) => {
 		e.preventDefault();
 
 		try {
-			await createAccount(email, password);
+			createAccount(email, password);
 			toast.success('Account succesfully created!');
 			navigate('/');
 		} catch (e) {
 			setAlert(e.message);
-			console.log('error: ', e);
 		}
 	};
 

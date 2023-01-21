@@ -12,11 +12,11 @@ const LoginForm = () => {
 
 	let navigate = useNavigate();
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = (e) => {
 		e.preventDefault();
 
 		try {
-			await logIn(email, password);
+			logIn(email, password);
 			navigate('/home');
 		} catch (e) {
 			setAlert(e.message);
